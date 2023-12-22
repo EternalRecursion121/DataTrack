@@ -71,7 +71,7 @@
 
   <!-- Modal content -->
   <div class="flex items-center justify-center min-h-screen">
-    <div class="bg-gray-800 text-white rounded-lg shadow-lg w-full max-w-lg m-4 p-6 space-y-4">
+    <div class="z-50 bg-gray-800 text-white rounded-lg shadow-lg w-full max-w-lg m-4 p-6 space-y-4">
       <h2 class="text-xl font-bold mb-4">
         {#if event} Edit Event {:else} Add Event {/if}
       </h2>
