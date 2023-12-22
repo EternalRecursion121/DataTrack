@@ -1,7 +1,7 @@
 <script>
     import { createEventDispatcher } from 'svelte';
-    import Attribute from '$lib/Attribute.svelte';
 
+    export let events;
     export let event = null;
     export let isOpen = false;
 
@@ -9,6 +9,8 @@
     let attributes = [];
     let editingIndex = null;
     const dispatch = createEventDispatcher();
+
+    let showSuggestions = false;
 
     // If an event is passed in, we're editing, otherwise, we're adding a new event.
     $: if (event) {
@@ -26,27 +28,33 @@
     }
 
     function saveEvent() {
-        // Perform validation if necessary
-        if (eventName.trim() === '') {
-            alert('Please enter a name for the event.');
-            return;
-        }
+      // Perform validation if necessary
+      console.log(eventName)
+      if (eventName.trim() === '') {
+          alert('Please enter a name for the event.');
+          return;
+      }
 
-        // Prepare the event data
-        const eventData = {
-            index: editingIndex,
+      const creationTime = new Date();
+
+      // Prepare the event data
+      const eventData = {
+          index: editingIndex,
+          event: {
             name: eventName,
-            attributes
-        };
+            attributes,
+            creationTime: creationTime
+          }
+      };
 
-        // Emit the save event with the event data
-        dispatch('save', eventData);
+      // Emit the save event with the event data
+      dispatch('save', eventData);
 
-        // Reset for next use
-        eventName = '';
-        attributes = [];
-        editingIndex = null;
-    }
+      // Reset for next use
+      eventName = '';
+      attributes = [];
+      editingIndex = null;
+  }
 
     function addAttribute() {
         attributes = [...attributes, { name: '', value: '' }];
@@ -57,11 +65,42 @@
         attributes = [...attributes];
     }
 
-    function handleAttributeChange(event) {
-        const { index, attribute } = event.detail;
-        attributes[index] = attribute;
-        attributes = [...attributes];
+
+    let suggestedTitles = [];
+    // Function to suggest event titles based on the input value
+    function suggestEventTitles(inputValue) {
+        if (inputValue.length > 0) {
+            suggestedTitles = events
+                .map(event => event.name)
+                .filter((name, index, self) => self.indexOf(name) === index)
+                .filter(name => name.toLowerCase().startsWith(inputValue.toLowerCase()))
+                .slice(0, 5); // Limit the number of suggestions
+        } else {
+            suggestedTitles = []; // Clear suggestions if the input is empty
+        }
     }
+
+    function onEventNameInput(event) {
+        eventName = event.target.value;
+        suggestEventTitles(eventName);
+        showSuggestions = true;
+    }
+
+
+    function useSuggestedTitle(title) {
+        eventName = title;
+        const lastEventWithSelectedTitle = [...events].reverse().find(event => event.name === title);
+        attributes = lastEventWithSelectedTitle ? lastEventWithSelectedTitle.attributes.map(attr => ({ ...attr })) : [];
+        showSuggestions = false; // Hide suggestions after selection
+    }
+
+    function handleBlur() {
+        // Use a timeout to delay hiding suggestions
+        setTimeout(() => {
+            showSuggestions = false;
+        }, 5); // Delay in milliseconds
+    }
+
 </script>
 
 {#if isOpen}
@@ -77,10 +116,29 @@
       </h2>
 
       <!-- Event name input -->
-      <div>
-        <label class="block text-sm font-bold mb-2" for="eventName">Event Name</label>
-        <input id="eventName" class="w-full p-2 rounded bg-gray-700 focus:outline-none focus:shadow-outline" type="text" bind:value={eventName}>
-      </div>
+      <div class="relative">
+          <input
+              type="text"
+              bind:value={eventName}
+              on:input={onEventNameInput}
+              on:blur={() => handleBlur()}
+              on:focus={() => showSuggestions = true}
+              class="w-full p-2 rounded bg-gray-700 focus:outline-none focus:shadow-outline"
+              placeholder="Event Name"
+          />
+          {#if suggestedTitles.length > 0 && showSuggestions}
+            <div class="absolute left-0 right-0 bg-gray-700 mt-1">
+                {#each suggestedTitles as title}
+                    <div
+                        class="p-2 hover:bg-gray-600 cursor-pointer"
+                        on:click={() => useSuggestedTitle(title)}
+                    >
+                        {title}
+                    </div>
+                {/each}
+            </div>
+            {/if}
+        </div>
 
       <!-- Attribute inputs -->
       {#each attributes as attribute, index}
