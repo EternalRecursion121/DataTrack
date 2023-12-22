@@ -66,39 +66,70 @@
 
 {#if isOpen}
 <div class="fixed inset-0 z-10 overflow-y-auto">
-    <!-- Modal backdrop -->
-    <div class="fixed inset-0 bg-black bg-opacity-50"></div>
+  <!-- Modal backdrop -->
+  <div class="fixed inset-0 bg-black bg-opacity-50"></div>
 
-    <!-- Modal content -->
-    <div class="flex items-center justify-center min-h-screen">
-        <div class="z-20 bg-gray-800 text-white rounded-lg shadow-lg max-w-md w-full m-4 p-6 min-w-[700px]">
-            <h2 class="text-xl font-bold mb-4">
-                {#if event} Edit Event {:else} Add Event {/if}
-            </h2>
+  <!-- Modal content -->
+  <div class="flex items-center justify-center min-h-screen">
+    <div class="bg-gray-800 text-white rounded-lg shadow-lg w-full max-w-lg m-4 p-6 space-y-4">
+      <h2 class="text-xl font-bold mb-4">
+        {#if event} Edit Event {:else} Add Event {/if}
+      </h2>
 
-            <!-- Event name input -->
-            <div class="mb-4">
-                <label class="block text-sm font-bold mb-2" for="eventName">Event Name</label>
-                <input id="eventName" class="w-full p-2 rounded bg-gray-700 focus:outline-none focus:shadow-outline" type="text" bind:value={eventName}>
-            </div>
+      <!-- Event name input -->
+      <div>
+        <label class="block text-sm font-bold mb-2" for="eventName">Event Name</label>
+        <input id="eventName" class="w-full p-2 rounded bg-gray-700 focus:outline-none focus:shadow-outline" type="text" bind:value={eventName}>
+      </div>
 
-            <!-- Attribute inputs -->
-            {#each attributes as attribute, index}
-                <Attribute {attribute} {index} on:change={handleAttributeChange} onDelete={deleteAttribute} />
-            {/each}
-
-            <div class="mt-4 flex justify-between">
-                <button class="flex-grow px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded focus:outline-none" on:click={addAttribute}>
-                    Add Attribute
-                </button>
-                <button class="flex-grow mx-4 px-4 py-2 bg-green-500 hover:bg-green-600 rounded focus:outline-none" on:click={saveEvent}>
-                    Save Event
-                </button>
-                <button class="flex-grow px-4 py-2 bg-red-500 hover:bg-red-600 rounded focus:outline-none" on:click={closeModal}>
-                    Close
-                </button>
-            </div>
+      <!-- Attribute inputs -->
+      {#each attributes as attribute, index}
+        <div class="flex flex-col sm:flex-row gap-2 mb-2">
+          <input
+            type="text"
+            placeholder="Attribute Name"
+            bind:value={attribute.name}
+            class="flex-grow p-2 rounded bg-gray-700 focus:outline-none focus:shadow-outline"
+          />
+          <input
+            type="text"
+            placeholder="Attribute Value"
+            bind:value={attribute.value}
+            class="flex-grow p-2 rounded bg-gray-700 focus:outline-none focus:shadow-outline"
+          />
+          <button
+            class="bg-red-500 hover:bg-red-600 rounded-full p-2 focus:outline-none focus:shadow-outline"
+            on:click={() => deleteAttribute(index)}
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" class="w-6 h-6">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
         </div>
+      {/each}
+
+      <!-- Action buttons -->
+      <div class="flex flex-wrap justify-between gap-2">
+        <button
+          class="px-4 py-2 bg-blue-500 hover:bg-blue-600 rounded focus:outline-none w-full sm:w-auto sm:flex-grow"
+          on:click={addAttribute}
+        >
+          Add Attribute
+        </button>
+        <button
+          class="px-4 py-2 bg-green-500 hover:bg-green-600 rounded focus:outline-none w-full sm:w-auto sm:flex-grow"
+          on:click={saveEvent}
+        >
+          Save Event
+        </button>
+        <button
+          class="px-4 py-2 bg-red-500 hover:bg-red-600 rounded focus:outline-none w-full sm:w-auto sm:flex-grow"
+          on:click={closeModal}
+        >
+          Close
+        </button>
+      </div>
     </div>
+  </div>
 </div>
 {/if}
