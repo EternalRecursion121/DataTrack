@@ -67,9 +67,8 @@
 
     function editEvent(index) {
         editingIndex = index;
-        const eventToEdit = events[index];
-        eventName = eventToEdit.name;
-        attributes = [...eventToEdit.attributes];
+        currentEvent = events[index];
+        isModalOpen = true;
     }
 
     function exportToJSON() {
