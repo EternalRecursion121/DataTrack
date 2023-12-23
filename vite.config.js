@@ -1,6 +1,10 @@
-import { sveltekit } from '@sveltejs/kit/vite';
-import { defineConfig } from 'vite';
+// vite.config.js / vite.config.ts
+import { sveltekit } from '@sveltejs/kit/vite'
+import { SvelteKitPWA } from '@vite-pwa/sveltekit'
 
-export default defineConfig({
-	plugins: [sveltekit()]
-});
+export default {
+  plugins: [
+    sveltekit(),
+    SvelteKitPWA()
+  ]
+}
