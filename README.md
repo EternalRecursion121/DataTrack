@@ -1,22 +1,26 @@
-# create-svelte
+# DataTrack
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+A progressive web application (PWA) built with SvelteKit for tracking and managing events with customizable attributes.
 
-## Creating a project
+## Features
 
-If you're seeing this, you've probably already done this step. Congrats!
+- Create and manage events with custom attributes
+- Edit and delete existing events
+- Auto-suggest event names and attributes based on previous entries
+- Export event data to JSON
+- Works offline as a PWA
+- Mobile-friendly responsive design
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
+## Tech Stack
 
-# create a new project in my-app
-npm create svelte@latest my-app
-```
+- [SvelteKit](https://kit.svelte.dev/) - Framework
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [Vite](https://vitejs.dev/) - Build tool
+- [PWA Support](https://github.com/vite-pwa/sveltekit) - For offline capabilities
 
 ## Developing
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once you've cloned the project and installed dependencies with `npm install`, start a development server:
 
 ```bash
 npm run dev
@@ -35,4 +39,6 @@ npm run build
 
 You can preview the production build with `npm run preview`.
 
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+## Data Storage
+
+All event data is stored locally in the browser's localStorage. No data is sent to external servers.
